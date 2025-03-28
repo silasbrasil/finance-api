@@ -1,0 +1,1 @@
+// colocar as coins como enums aqui
