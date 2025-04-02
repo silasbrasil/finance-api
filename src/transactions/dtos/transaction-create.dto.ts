@@ -8,3 +8,5 @@ export const TransactionSchema = z.object({
   description: z.string().max(150).optional(),
   transactionType: z.nativeEnum(TransactionTypes),
 });
+
+export type TransactionDto = z.infer<typeof TransactionSchema>;
