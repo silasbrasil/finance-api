@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { COINS, TRANSACTION_TYPES } from '../enums';
+import { Coins, TransactionTypes } from '../enums';
 import { TransactionSchema } from './transaction-create.dto';
 
 describe('transaction-create DTO test Suite', () => {
@@ -7,8 +7,8 @@ describe('transaction-create DTO test Suite', () => {
     // Arranges
     const body = {
       amount: 1,
-      coin: COINS.BRL,
-      transactionType: TRANSACTION_TYPES.DEPOSIT,
+      coin: Coins.BRL,
+      transactionType: TransactionTypes.DEPOSIT,
     };
 
     // Acts
@@ -24,9 +24,9 @@ describe('transaction-create DTO test Suite', () => {
     // Arranges
     const body = {
       amount: 1,
-      coin: COINS.BTC,
+      coin: Coins.BTC,
       description: 'Foi um pix de 1 bitcoin',
-      transactionType: TRANSACTION_TYPES.DEPOSIT,
+      transactionType: TransactionTypes.DEPOSIT,
     };
 
     // Actions
@@ -43,8 +43,8 @@ describe('transaction-create DTO test Suite', () => {
     // Arranges
     const body = {
       amount: 0.0035,
-      coin: COINS.BTC,
-      transactionType: TRANSACTION_TYPES.WITHDRAWAL,
+      coin: Coins.BTC,
+      transactionType: TransactionTypes.WITHDRAWAL,
     };
 
     // Actions
@@ -56,12 +56,12 @@ describe('transaction-create DTO test Suite', () => {
     expect(transaction.transactionType).toBe('Withdrawal');
   });
 
-  it('Invalidate transaction withdrawal negative value', () => {
+  it('Invalidate transaction amount is negative value', () => {
     // Arranges
     const body = {
       amount: -0.035,
-      coin: COINS.BTC,
-      transactionType: TRANSACTION_TYPES.WITHDRAWAL,
+      coin: Coins.BTC,
+      transactionType: TransactionTypes.WITHDRAWAL,
     };
 
     try {
@@ -73,7 +73,56 @@ describe('transaction-create DTO test Suite', () => {
       expect(error.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            message: "Number must be greater than 0"
+            message: "Number must be greater than 0",
+            path: ["amount"]
+          })
+        ])
+      );
+    }
+  });
+
+  it('Invalidate transaction when coin is invalid', () => {
+    // Arranges
+    const body = {
+      amount: 0.035,
+      coin: "JST",
+      transactionType: TransactionTypes.WITHDRAWAL,
+    };
+
+    try {
+      // Actions
+      TransactionSchema.parse(body);
+    } catch(error) {
+      // Asserts
+      expect(error).toBeInstanceOf(ZodError);
+      expect(error.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ["coin"]
+          })
+        ])
+      );
+    }
+  });
+
+  it('Invalidate transaction when transactionType is invalid', () => {
+    // Arranges
+    const body = {
+      amount: 0.035,
+      coin: Coins.BRL,
+      transactionType: 'PIX',
+    };
+
+    try {
+      // Actions
+      TransactionSchema.parse(body);
+    } catch(error) {
+      // Asserts
+      expect(error).toBeInstanceOf(ZodError);
+      expect(error.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ["transactionType"]
           })
         ])
       );

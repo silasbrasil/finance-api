@@ -1,9 +1,10 @@
 import { z } from 'zod';
-import { COINS, TRANSACTION_TYPES } from '../enums';
+import { Coins, TransactionTypes } from '../enums';
+
 
 export const TransactionSchema = z.object({
   amount: z.number().positive(),
-  coin: z.nativeEnum(COINS),
+  coin: z.nativeEnum(Coins),
   description: z.string().max(150).optional(),
-  transactionType: z.nativeEnum(TRANSACTION_TYPES),
+  transactionType: z.nativeEnum(TransactionTypes),
 });

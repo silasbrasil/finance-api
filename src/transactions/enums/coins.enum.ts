@@ -1,7 +1,6 @@
-export enum COINS {
+export enum Coins {
   BRL = 'BRL',
   USD = 'USD',
   BTC = 'BTC',
   ETH = 'ETH',
-  SOL = 'SOL',
 }
