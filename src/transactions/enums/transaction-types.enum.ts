@@ -1,1 +1,4 @@
-// trazer os transaction type para esse arquivo
+export enum TRANSACTION_TYPES {
+  DEPOSIT = 'Deposit',
+  WITHDRAWAL = 'Withdrawal',
+}
