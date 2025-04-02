@@ -1,3 +1,4 @@
+import { ZodError } from 'zod';
 import { COINS, TRANSACTION_TYPES } from '../enums';
 import { TransactionSchema } from './transaction-create.dto';
 
@@ -53,5 +54,29 @@ describe('transaction-create DTO test Suite', () => {
     expect(transaction.amount).toBe(0.0035);
     expect(transaction.coin).toBe('BTC');
     expect(transaction.transactionType).toBe('Withdrawal');
+  });
+
+  it('Invalidate transaction withdrawal negative value', () => {
+    // Arranges
+    const body = {
+      amount: -0.035,
+      coin: COINS.BTC,
+      transactionType: TRANSACTION_TYPES.WITHDRAWAL,
+    };
+
+    try {
+      // Actions
+      TransactionSchema.parse(body);
+    } catch(error) {
+      // Asserts
+      expect(error).toBeInstanceOf(ZodError);
+      expect(error.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Number must be greater than 0"
+          })
+        ])
+      );
+    }
   });
 });
