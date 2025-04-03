@@ -5,6 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
+  const path = '/transactions'
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -20,10 +21,10 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
+  it(`${path} (GET)`, () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get(path)
       .expect(200)
-      .expect('Hello World!');
+      .expect({ data: [], nextPageToken: 'xyz' });
   });
 });
